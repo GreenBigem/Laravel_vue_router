@@ -13,6 +13,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -30,31 +37,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Create",
-  data: function data() {
-    return {
+  mounted: function mounted() {
+    this.$store.commit('setPerson', {
       name: null,
       age: null,
       job: null
-    };
+    });
   },
-  methods: {
-    store: function store() {
-      var _this = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/people', {
-        name: this.name,
-        age: this.age,
-        job: this.job
-      }).then(function (res) {
-        _this.$router.push({
-          name: 'person.index'
-        });
-      });
-    }
-  }
+  methods: {},
+  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapGetters)({
+    isDisabled: "isDisabled",
+    person: "person"
+  }))
 });
 
 /***/ }),
@@ -150,19 +148,19 @@ var render = function () {
           {
             name: "model",
             rawName: "v-model",
-            value: _vm.name,
-            expression: "name",
+            value: _vm.person.name,
+            expression: "person.name",
           },
         ],
         staticClass: "form-control",
         attrs: { type: "text", placeholder: "name" },
-        domProps: { value: _vm.name },
+        domProps: { value: _vm.person.name },
         on: {
           input: function ($event) {
             if ($event.target.composing) {
               return
             }
-            _vm.name = $event.target.value
+            _vm.$set(_vm.person, "name", $event.target.value)
           },
         },
       }),
@@ -174,19 +172,19 @@ var render = function () {
           {
             name: "model",
             rawName: "v-model",
-            value: _vm.age,
-            expression: "age",
+            value: _vm.person.age,
+            expression: "person.age",
           },
         ],
         staticClass: "form-control",
         attrs: { type: "number", placeholder: "age" },
-        domProps: { value: _vm.age },
+        domProps: { value: _vm.person.age },
         on: {
           input: function ($event) {
             if ($event.target.composing) {
               return
             }
-            _vm.age = $event.target.value
+            _vm.$set(_vm.person, "age", $event.target.value)
           },
         },
       }),
@@ -198,19 +196,19 @@ var render = function () {
           {
             name: "model",
             rawName: "v-model",
-            value: _vm.job,
-            expression: "job",
+            value: _vm.person.job,
+            expression: "person.job",
           },
         ],
         staticClass: "form-control",
         attrs: { type: "text", placeholder: "job" },
-        domProps: { value: _vm.job },
+        domProps: { value: _vm.person.job },
         on: {
           input: function ($event) {
             if ($event.target.composing) {
               return
             }
-            _vm.job = $event.target.value
+            _vm.$set(_vm.person, "job", $event.target.value)
           },
         },
       }),
@@ -219,11 +217,15 @@ var render = function () {
     _c("div", { staticClass: "mb-3" }, [
       _c("input", {
         staticClass: "btn btn-primary",
-        attrs: { type: "submit", value: "Add" },
+        attrs: { disabled: !_vm.isDisabled, type: "submit", value: "Add" },
         on: {
           click: function ($event) {
             $event.preventDefault()
-            return _vm.store.apply(null, arguments)
+            return _vm.$store.dispatch("store", {
+              name: _vm.person.name,
+              age: _vm.person.age,
+              job: _vm.person.job,
+            })
           },
         },
       }),
